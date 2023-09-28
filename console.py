@@ -13,20 +13,28 @@ from models.state import State
 from models.user import User
 import shlex  # for splitting the line along spaces except in double quotes
 
-classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
-           "Place": Place, "Review": Review, "State": State, "User": User}
+classes = {
+    "Amenity": Amenity,
+    "BaseModel": BaseModel,
+    "City": City,
+    "Place": Place,
+    "Review": Review,
+    "State": State,
+    "User": User,
+}
 
 
 class HBNBCommand(cmd.Cmd):
-    """ HBNH console """
-    prompt = '(hbnb) '
+    """HBNH console"""
+
+    prompt = "(hbnb) "
 
     def do_EOF(self, arg):
         """Exits console"""
         return True
 
     def emptyline(self):
-        """ overwriting the emptyline method """
+        """overwriting the emptyline method"""
         return False
 
     def do_quit(self, arg):
@@ -38,11 +46,11 @@ class HBNBCommand(cmd.Cmd):
         new_dict = {}
         for arg in args:
             if "=" in arg:
-                kvp = arg.split('=', 1)
+                kvp = arg.split("=", 1)
                 key = kvp[0]
                 value = kvp[1]
                 if value[0] == value[-1] == '"':
-                    value = shlex.split(value)[0].replace('_', ' ')
+                    value = shlex.split(value)[0].replace("_", " ")
                 else:
                     try:
                         value = int(value)
@@ -77,7 +85,7 @@ class HBNBCommand(cmd.Cmd):
             return False
         if args[0] in classes:
             if len(args) > 1:
-                key = args[0] + "." + args[1]
+                key = f"{args[0]}.{args[1]}"
                 if key in models.storage.all():
                     print(models.storage.all()[key])
                 else:
@@ -94,7 +102,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
         elif args[0] in classes:
             if len(args) > 1:
-                key = args[0] + "." + args[1]
+                key = f"{args[0]}.{args[1]}"
                 if key in models.storage.all():
                     models.storage.all().pop(key)
                     models.storage.save()
@@ -108,7 +116,6 @@ class HBNBCommand(cmd.Cmd):
     def do_all(self, arg):
         """Prints string representations of instances"""
         args = shlex.split(arg)
-        obj_list = []
         if len(args) == 0:
             obj_dict = models.storage.all()
         elif args[0] in classes:
@@ -116,8 +123,7 @@ class HBNBCommand(cmd.Cmd):
         else:
             print("** class doesn't exist **")
             return False
-        for key in obj_dict:
-            obj_list.append(str(obj_dict[key]))
+        obj_list = [str(obj_dict[key]) for key in obj_dict]
         print("[", end="")
         print(", ".join(obj_list), end="")
         print("]")
@@ -125,8 +131,7 @@ class HBNBCommand(cmd.Cmd):
     def do_update(self, arg):
         """Update an instance based on the class name, id, attribute & value"""
         args = shlex.split(arg)
-        integers = ["number_rooms", "number_bathrooms", "max_guest",
-                    "price_by_night"]
+        integers = ["number_rooms", "number_bathrooms", "max_guest", "price_by_night"]
         floats = ["latitude", "longitude"]
         if len(args) == 0:
             print("** class name missing **")
@@ -160,5 +165,6 @@ class HBNBCommand(cmd.Cmd):
         else:
             print("** class doesn't exist **")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     HBNBCommand().cmdloop()
