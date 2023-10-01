@@ -4,9 +4,17 @@ Fabric script based on the file 2-do_deploy_web_static.py that creates and
 distributes an archive to the web servers
 """
 
-from fabric.api import env, local, put, run
 from datetime import datetime
 from os.path import exists, isdir
+
+from fabric.api import env, local, put, run
+
+cofucan_hosts = {
+    'web-01': '34.234.201.201',
+    'web-02': '100.25.211.153',
+    'lb-01': '100.26.252.213',
+}
+
 env.hosts = ['142.44.167.228', '144.217.246.195']
 
 

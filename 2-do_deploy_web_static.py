@@ -4,8 +4,16 @@ Fabric script based on the file 1-pack_web_static.py that distributes an
 archive to the web servers
 """
 
-from fabric.api import put, run, env
 from os.path import exists
+
+from fabric.api import put, run, env
+
+cofucan_hosts = {
+    'web-01': '34.234.201.201',
+    'web-02': '100.25.211.153',
+    'lb-01': '100.26.252.213',
+}
+
 env.hosts = ['142.44.167.228', '144.217.246.195']
 
 
