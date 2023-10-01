@@ -49,7 +49,7 @@ class DBStorage:
         """query on the current database session"""
         new_dict = {}
         if cls:
-            # If a specific class is provided, query objects only for that class.
+            # If a class is provided, query objects only for that class.
             objs = self.__session.query(cls).all()
         else:
             # If cls is not provided, query objects for all registered classes.
