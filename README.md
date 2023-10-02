@@ -178,7 +178,7 @@ No known bugs at this time.
 ## Authors
 
 Uche Ofia - [Github](https://github.com/Cofucan) / [Twitter](https://twitter.com/coolucheofia)
-Kate Onyebuchi - [Github]() / [Twitter]()
+Kate Onyebuchi - [Github](https://github.com/Nwaigba1234567) / [Twitter]()
 
 Second part of Airbnb: Joann Vuong
 
