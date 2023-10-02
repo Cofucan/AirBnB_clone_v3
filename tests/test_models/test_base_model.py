@@ -13,7 +13,7 @@ import models
 
 
 BaseModel = models.base_model.BaseModel
-module_doc = models.base_model.__doc__
+MODULE_DOC = models.base_model.__doc__
 
 
 class TestBaseModelDocs(unittest.TestCase):
@@ -36,8 +36,8 @@ class TestBaseModelDocs(unittest.TestCase):
 
     def test_module_docstring(self):
         """Test for the existence of module docstring"""
-        self.assertIsNot(module_doc, None, "base_model.py needs a docstring")
-        self.assertTrue(len(module_doc) > 1, "base_model.py needs a docstring")
+        self.assertIsNot(MODULE_DOC, None, "base_model.py needs a docstring")
+        self.assertTrue(len(MODULE_DOC) > 1, "base_model.py needs a docstring")
 
     def test_class_docstring(self):
         """Test for the BaseModel class docstring"""

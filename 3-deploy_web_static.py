@@ -4,9 +4,17 @@ Fabric script based on the file 2-do_deploy_web_static.py that creates and
 distributes an archive to the web servers
 """
 
-from fabric.api import env, local, put, run
 from datetime import datetime
 from os.path import exists, isdir
+
+from fabric.api import env, local, put, run
+
+cofucan_hosts = {
+    'web-01': '34.234.201.201',
+    'web-02': '100.25.211.153',
+    'lb-01': '100.26.252.213',
+}
+
 env.hosts = ['142.44.167.228', '144.217.246.195']
 
 
@@ -16,10 +24,10 @@ def do_pack():
         date = datetime.now().strftime("%Y%m%d%H%M%S")
         if isdir("versions") is False:
             local("mkdir versions")
-        file_name = "versions/web_static_{}.tgz".format(date)
-        local("tar -cvzf {} web_static".format(file_name))
+        file_name = f"versions/web_static_{date}.tgz"
+        local(f"tar -cvzf {file_name} web_static")
         return file_name
-    except:
+    except Exception:
         return None
 
 
@@ -40,13 +48,11 @@ def do_deploy(archive_path):
         run('rm -rf /data/web_static/current')
         run('ln -s {}{}/ /data/web_static/current'.format(path, no_ext))
         return True
-    except:
+    except Exception:
         return False
 
 
 def deploy():
     """creates and distributes an archive to the web servers"""
     archive_path = do_pack()
-    if archive_path is None:
-        return False
-    return do_deploy(archive_path)
+    return False if archive_path is None else do_deploy(archive_path)
