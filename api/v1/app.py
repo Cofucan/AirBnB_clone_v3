@@ -11,7 +11,9 @@ from models import storage
 app = Flask(__name__)
 app.url_map.strict_slashes = False
 app.register_blueprint(app_views)
-CORS(app, resources={"/*": {"origins": app_host}})
+host = getenv("HBNB_API_HOST", "0.0.0.0")
+port = int(getenv("HBNB_API_PORT", "5000"))
+CORS(app, resources={"/*": {"origins": host}})
 
 
 @app.teardown_appcontext
