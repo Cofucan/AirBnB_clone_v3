@@ -23,13 +23,13 @@ def teardown_flask(exception):
 
 
 @app.errorhandler(404)
-def error_404(err):
+def handle_404(err):
     """Handles the 404 HTTP error code."""
     return jsonify(error="Not found"), 404
 
 
 @app.errorhandler(400)
-def error_400(err):
+def handle_400(err):
     """Handles the 400 HTTP error code."""
     if err.description:
         return jsonify(error=err.description), 400
