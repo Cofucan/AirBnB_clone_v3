@@ -8,13 +8,13 @@ from models import storage
 
 @app_views.route("/status", methods=["GET"], strict_slashes=False)
 def status():
-    """Returns JSON"""
-    return jsonify(status="OK")
+    """Returns the status of the API"""
+    return jsonify({status: "OK"})
 
 
 @app_views.route("/stats", methods=["GET"], strict_slashes=False)
 def stat():
-    """returns the number of all objects by type"""
+    """Returns the number of all objects by type"""
     from models.amenity import Amenity
     from models.city import City
     from models.place import Place
