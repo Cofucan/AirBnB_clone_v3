@@ -39,7 +39,9 @@ class DBStorage:
         hbnb_host = getenv("HBNB_MYSQL_HOST")
         hbnb_db = getenv("HBNB_MYSQL_DB")
         hbnb_env = getenv("HBNB_ENV")
-        url = f"mysql+mysqldb://{hbnb_user}:{hbnb_pwd}@{hbnb_host}/{hbnb_db}"
+        url = "mysql+mysqldb://{}:{}@{}/{}".format(
+            hbnb_user, hbnb_pwd, hbnb_host, hbnb_db
+        )
         self.__engine = create_engine(url, pool_pre_ping=True)
 
         if hbnb_env == "test":
@@ -58,7 +60,7 @@ class DBStorage:
                 objs += self.__session.query(clss).all()
 
         for obj in objs:
-            key = f"{obj.__class__.__name__}.{obj.id}"
+            key = "{}.{}".format(obj.__class__.__name__, obj.id)
             new_dict[key] = obj
         return new_dict
 
