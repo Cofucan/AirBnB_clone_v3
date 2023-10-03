@@ -39,5 +39,5 @@ def handle_400(err):
 
 if __name__ == "__main__":
     env_host = getenv("HBNB_API_HOST", "0.0.0.0")
-    env_port = getenv("HBNB_API_PORT", "5000")
+    env_port = getenv("HBNB_API_PORT", 5000)
     app.run(host=env_host, port=env_port, threaded=True)
