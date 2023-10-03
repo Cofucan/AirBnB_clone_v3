@@ -27,41 +27,35 @@ classes = {
 
 
 class DBStorage:
-    """Interacts with the MySQL database"""
+    """interaacts with the MySQL database"""
 
     __engine = None
     __session = None
 
     def __init__(self):
         """Instantiate a DBStorage object"""
-        hbnb_user = getenv("HBNB_MYSQL_USER")
-        hbnb_pwd = getenv("HBNB_MYSQL_PWD")
-        hbnb_host = getenv("HBNB_MYSQL_HOST")
-        hbnb_db = getenv("HBNB_MYSQL_DB")
-        hbnb_env = getenv("HBNB_ENV")
-        url = "mysql+mysqldb://{}:{}@{}/{}".format(
-            hbnb_user, hbnb_pwd, hbnb_host, hbnb_db
+        HBNB_MYSQL_USER = getenv("HBNB_MYSQL_USER")
+        HBNB_MYSQL_PWD = getenv("HBNB_MYSQL_PWD")
+        HBNB_MYSQL_HOST = getenv("HBNB_MYSQL_HOST")
+        HBNB_MYSQL_DB = getenv("HBNB_MYSQL_DB")
+        HBNB_ENV = getenv("HBNB_ENV")
+        self.__engine = create_engine(
+            "mysql+mysqldb://{}:{}@{}/{}".format(
+                HBNB_MYSQL_USER, HBNB_MYSQL_PWD, HBNB_MYSQL_HOST, HBNB_MYSQL_DB
+            )
         )
-        self.__engine = create_engine(url, pool_pre_ping=True)
-
-        if hbnb_env == "test":
+        if HBNB_ENV == "test":
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
         """query on the current database session"""
         new_dict = {}
-        if cls:
-            # If a class is provided, query objects only for that class.
-            objs = self.__session.query(cls).all()
-        else:
-            # If cls is not provided, query objects for all registered classes.
-            objs = []
-            for clss in classes.values():
-                objs += self.__session.query(clss).all()
-
-        for obj in objs:
-            key = "{}.{}".format(obj.__class__.__name__, obj.id)
-            new_dict[key] = obj
+        for clss in classes:
+            if cls is None or cls is classes[clss] or cls is clss:
+                objs = self.__session.query(classes[clss]).all()
+                for obj in objs:
+                    key = obj.__class__.__name__ + "." + obj.id
+                    new_dict[key] = obj
         return new_dict
 
     def new(self, obj):
@@ -81,20 +75,21 @@ class DBStorage:
         """reloads data from the database"""
         Base.metadata.create_all(self.__engine)
         sess_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
-        session = scoped_session(sess_factory)
-        self.__session = session
-
-    def get(self, cls, id):
-        """Retrieve one object"""
-        if cls is None or id is None:
-            return None
-        objs = self.__session.query(cls).all()
-        return next((obj for obj in objs if obj.id == id), None)
-
-    def count(self, cls=None):
-        """Count the number of objects in storage"""
-        return len(self.all(cls))
+        Session = scoped_session(sess_factory)
+        self.__session = Session
 
     def close(self):
         """call remove() method on the private session attribute"""
         self.__session.remove()
+
+    def get(self, cls, id):
+        """Retrieve object based on the class and"""
+        if cls and id:
+            return self.__session.query(cls).get(id)
+        return None
+
+    def count(self, cls=None):
+        """Count the number of objects in storage"""
+        if cls:
+            return self.__session.query(cls).count()
+        return sum(self.__session.query(c).count() for c in classes.values())
